@@ -1,5 +1,7 @@
 const express = require('express');
 
+const path = require('path');
+
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
@@ -26,6 +28,10 @@ const port = process.env.PORT;
 app.use(methodOverride('_method'));
 
 app.use(bodyParser.urlencoded({ extended: false }));
+
+// TinyMCE
+app.use('/tinymce', express.static(path.join(__dirname, 'node_modules', 'tinymce')));
+// End TinyMCE
 
 
 app.set('views', `${__dirname}/views`);
