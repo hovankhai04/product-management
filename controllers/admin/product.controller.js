@@ -200,9 +200,16 @@ module.exports.edit = async (req, res) => {
 
     const product = await Product.findOne(find);
 
+    const category = await ProductCategory.find({
+      deleted: false
+    });
+
+    const newCategory = createTreeHelper.tree(category);
+
     res.render("admin/pages/products/edit", {
       pageTitle: "Sửa sản phẩm",
-      product: product
+      product: product,
+      category: newCategory
     });
   } catch (error) {
     req.flash("error", "Không tìm thấy sản phẩm này!");
@@ -213,6 +220,7 @@ module.exports.edit = async (req, res) => {
 // [PATCH] /admin/products/edit/:id
 module.exports.editPatch = async (req, res) => {
   try {
+
     req.body.price = parseInt(req.body.price);
     req.body.discountPercentage = parseInt(req.body.discountPercentage);
     req.body.stock = parseInt(req.body.stock);
@@ -230,11 +238,16 @@ module.exports.editPatch = async (req, res) => {
     }
 
     await Product.updateOne({ _id: req.params.id }, req.body);
+
+    res.redirect(`${systemConfig.prefixAdmin}/products/edit/${req.params.id}`);
+
     req.flash("success", 'Đã cập nhật sản phẩm thành công!');
   } catch (error) {
     req.flash("error", "Cập nhật sản phẩm thất bại!");
+    res.redirect(`${systemConfig.prefixAdmin}/products`);
   }
-  res.redirect(`${systemConfig.prefixAdmin}/products`);
+
+
 }
 
 // [GET] /admin/products/detail/:id
