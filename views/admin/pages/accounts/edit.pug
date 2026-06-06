@@ -5,9 +5,10 @@ block main
   h1(class="mb-4") #{pageTitle}
 
   +alert-error(3000)
+  +alert-success(3000)
 
   form(
-    action=`${prefixAdmin}/accounts/create`
+    action=`${prefixAdmin}/accounts/edit/${record.id}?_method=PATCH`
     method="POST"
     enctype="multipart/form-data"
   )
@@ -18,6 +19,7 @@ block main
         class="form-control"
         id="fullName"
         name="fullName"
+        value=record.fullName
         required
       )
     
@@ -28,6 +30,7 @@ block main
         class="form-control"
         id="email"
         name="email"
+        value=record.email
         required
       )
 
@@ -38,7 +41,7 @@ block main
         class="form-control"
         id="password"
         name="password"
-        required
+        placeholder="Nhập mật khẩu nếu muốn thay đổi"
       )
     
     div(class="form-group")
@@ -48,6 +51,7 @@ block main
         class="form-control"
         id="phone"
         name="phone"
+        value=record.phone
       )
 
     div(
@@ -62,11 +66,12 @@ block main
         name="avatar"
         accept="image/*"
         upload-image-input
+        value=record.avatar
       )
       img(
-        src=""
-        upload-image-preview 
+        src=record.avatar
         class="image-preview"
+        upload-image-preview
       )
     
     div(class="form-group")
@@ -78,7 +83,10 @@ block main
       )
         option(disabled) -- Chọn nhóm quyền --
         each role in roles
-          option(value=role.id) #{role.title}
+          option(
+          value=role.id
+          selected=(record.role_id == role.id ? true : false)
+          ) #{role.title}
     
     div(class="form-group form-check form-check-inline")
       input(
@@ -87,7 +95,7 @@ block main
         id="statusActive"
         name="status"
         value="active"
-        checked
+        checked=(record.status == "active" ? true : false)
       )
       label(for="statusActive" class="form-check-label") Hoạt động
     
@@ -98,10 +106,12 @@ block main
         id="statusInactive"
         name="status"
         value="inactive"
+        checked=(record.status == "inactive" ? true : false)
       )
       label(for="statusInactive" class="form-check-label") Không hoạt động
     
     div(class="form-group")
-      button(type="submit" class="btn btn-primary") Tạo mới
-  
-  script(src="/admin/js/product.js")
+      button(type="submit" class="btn btn-primary") Cập nhật
+
+  script(src="/admin/js/product.js") 
+

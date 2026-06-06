@@ -85,12 +85,10 @@ module.exports.changeStatus = async (req, res) => {
     await Product.updateOne({ _id: id }, { status: status });
 
     req.flash("success", 'Đã thay đổi trạng thái của sản phẩm thành công!');
-    const backUrl = req.get("Referer") || `${systemConfig.prefixAdmin}/products`;
-    res.redirect(backUrl);
   } catch (error) {
     console.error(error);
-    res.redirect(`${systemConfig.prefixAdmin}/products`);
   }
+  res.redirect(`${systemConfig.prefixAdmin}/products`);
 };
 
 // [PATCH] /admin/products/change-multi
@@ -129,11 +127,10 @@ module.exports.changeMulti = async (req, res) => { // cài thêm thư viện bod
     default:
       break;
   }
-  const backUrl = req.get("Referer") || `${systemConfig.prefixAdmin}/products`;
-  res.redirect(backUrl);
+  res.redirect(`${systemConfig.prefixAdmin}/products`);
 }
 
-// [PATCH] /admin/products/delete/:status/:id
+// [DELETE] /admin/products/delete/:id
 module.exports.deleteItem = async (req, res) => {
   try {
     const id = req.params.id;
@@ -144,12 +141,11 @@ module.exports.deleteItem = async (req, res) => {
       deletedAt: new Date()
     });
     req.flash("success", `Đã xóa sản phẩm thành công!`);
-    const backUrl = req.get("Referer") || `${systemConfig.prefixAdmin}/products`;
-    res.redirect(backUrl);
   } catch (error) {
     console.error(error);
-    res.redirect(`${systemConfig.prefixAdmin}/products`);
   }
+
+  res.redirect(`${systemConfig.prefixAdmin}/products`);
 };
 
 // [GET] /admin/products/create
@@ -239,15 +235,12 @@ module.exports.editPatch = async (req, res) => {
 
     await Product.updateOne({ _id: req.params.id }, req.body);
 
-    res.redirect(`${systemConfig.prefixAdmin}/products/edit/${req.params.id}`);
-
     req.flash("success", 'Đã cập nhật sản phẩm thành công!');
+
   } catch (error) {
     req.flash("error", "Cập nhật sản phẩm thất bại!");
-    res.redirect(`${systemConfig.prefixAdmin}/products`);
   }
-
-
+  res.redirect(`${systemConfig.prefixAdmin}/products`);
 }
 
 // [GET] /admin/products/detail/:id

@@ -98,3 +98,52 @@ module.exports.editPatch = async (req, res) => {
     req.flash("error", "Cập nhật danh mục sản phẩm thất bại!");
   }
 }
+
+// [DELETE] /admin/products-category/delete/:id
+module.exports.deleteItem = async (req, res) => {
+  try {
+    const id = req.params.id;
+
+    // await Product.deleteOne({ _id: id });
+    await ProductCategory.updateOne({ _id: id }, {
+      deleted: true,
+      deletedAt: new Date()
+    });
+    req.flash("success", `Đã xóa sản phẩm thành công!`);
+  } catch (error) {
+    console.error(error);
+  }
+
+  res.redirect(`${systemConfig.prefixAdmin}/products-category`);
+};
+
+// [GET] /admin/products-category/detail/:id
+module.exports.detail = async (req, res) => {
+  try {
+    const find = {
+      deleted: false,
+      _id: req.params.id
+    }
+
+    const productCategory = await ProductCategory.findOne(find);
+
+    let parentCategory = null;
+    if (productCategory.parent_id && productCategory.parent_id !== "") {
+      parentCategory = await ProductCategory.findOne({
+        _id: productCategory.parent_id,
+        deleted: false
+      });
+    }
+
+
+    res.render("admin/pages/products-category/detail", {
+      pageTitle: productCategory.title,
+      productCategory: productCategory,
+      parentCategory: parentCategory
+
+    });
+  } catch (error) {
+    req.flash("error", "Không tìm thấy sản phẩm này!");
+    res.redirect(`${systemConfig.prefixAdmin}/products-category`);
+  }
+}

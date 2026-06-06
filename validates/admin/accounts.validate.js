@@ -20,3 +20,19 @@ module.exports.createPost = async (req, res, next) => {
   }
   next();
 };
+
+module.exports.editPatch = async (req, res, next) => {
+  if (!req.body.fullName) {
+    req.flash('error', 'Vui lòng nhập họ tên');
+    res.redirect(`${systemConfig.prefixAdmin}/accounts/create`);
+    return;
+  }
+
+  if (!req.body.email) {
+    req.flash('error', 'Vui lòng nhập email');
+    res.redirect(`${systemConfig.prefixAdmin}/accounts/create`);
+    return;
+  }
+  next();
+};
+
