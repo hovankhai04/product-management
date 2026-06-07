@@ -2,6 +2,8 @@ const express = require('express');
 
 const path = require('path');
 
+const moment = require('moment');
+
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
@@ -50,6 +52,8 @@ app.use((req, res, next) => {
 
 // App locals variables : tạo ra 1 biến toàn cục để dụng được trong file .pug
 app.locals.prefixAdmin = systemConfig.prefixAdmin;
+
+app.locals.moment = moment;
 
 // sử dụng file tĩnh 
 app.use(express.static(`${__dirname}/public`));

@@ -12,6 +12,8 @@ include ../../mixins/alert.pug
 
 include ../../mixins/sort.pug
 
+include ../../mixins/moment.pug
+
 block main
   +alert-success(5000)
 
@@ -63,6 +65,7 @@ block main
               th Giá
               th Vị trí
               th Trạng thái 
+              th Người tạo
               th Hành động 
               
             tbody 
@@ -115,6 +118,10 @@ block main
                         p(class="badge badge-success") Đang hoạt động
                       else
                         p(class="badge badge-danger") Dừng hoạt động
+                  td 
+                    p #{item.accountFullname}
+                    p
+                      +formatDate(item.createdBy.createdAt)
                   td
                     a(
                       href=`${prefixAdmin}/products/detail/${item.id}`
