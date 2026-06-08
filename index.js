@@ -28,7 +28,7 @@ const port = process.env.PORT;
 
 
 async function startServer() {
-  database.connect();
+  await database.connect();
 
 
   app.use(methodOverride('_method'));
