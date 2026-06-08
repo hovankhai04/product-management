@@ -22,46 +22,53 @@ const systemConfig = require('./configs/system');
 const routeAdmin = require('./routes/admin/index.route');
 const route = require('./routes/client/index.route');
 
-database.connect();
 
 const app = express();
 const port = process.env.PORT;
 
-app.use(methodOverride('_method'));
 
-app.use(bodyParser.urlencoded({ extended: false }));
-
-// TinyMCE
-app.use('/tinymce', express.static(path.join(__dirname, 'node_modules', 'tinymce')));
-// End TinyMCE
+async function startServer() {
+  database.connect();
 
 
-app.set('views', `${__dirname}/views`);
-app.set('view engine', 'pug');
+  app.use(methodOverride('_method'));
 
-// Flash 
-app.use(cookieParser("VANKHAI"));
-app.use(session({ cookie: { maxAge: 60000 } }));
-app.use(flash());
+  app.use(bodyParser.urlencoded({ extended: false }));
 
-app.use((req, res, next) => {
-  res.locals.messages = req.flash(); // req.flash() trả về một object chứa các message
-  next();
-});
-// End Flash
+  // TinyMCE
+  app.use('/tinymce', express.static(path.join(__dirname, 'node_modules', 'tinymce')));
+  // End TinyMCE
 
-// App locals variables : tạo ra 1 biến toàn cục để dụng được trong file .pug
-app.locals.prefixAdmin = systemConfig.prefixAdmin;
 
-app.locals.moment = moment;
+  app.set('views', `${__dirname}/views`);
+  app.set('view engine', 'pug');
 
-// sử dụng file tĩnh 
-app.use(express.static(`${__dirname}/public`));
+  // Flash 
+  app.use(cookieParser("VANKHAI"));
+  app.use(session({ cookie: { maxAge: 60000 } }));
+  app.use(flash());
 
-// Routes ( đăng ký các route vào server express )
-routeAdmin(app);
-route(app);
+  app.use((req, res, next) => {
+    res.locals.messages = req.flash(); // req.flash() trả về một object chứa các message
+    next();
+  });
+  // End Flash
 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
+  // App locals variables : tạo ra 1 biến toàn cục để dụng được trong file .pug
+  app.locals.prefixAdmin = systemConfig.prefixAdmin;
+
+  app.locals.moment = moment;
+
+  // sử dụng file tĩnh 
+  app.use(express.static(`${__dirname}/public`));
+
+  // Routes ( đăng ký các route vào server express )
+  routeAdmin(app);
+  route(app);
+
+  app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
+  });
+}
+
+startServer();
