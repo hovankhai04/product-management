@@ -21,3 +21,15 @@ module.exports.requireAuth = async (req, res, next) => {
   }
 
 }
+
+module.exports.checkPermission = (permission) => {
+  return (req, res, next) => {
+    const permissions = res.locals.role?.permissions || [];
+
+    if (!permissions.includes(permission)) {
+      return res.status(403).send("Bạn không có quyền truy cập");
+    }
+
+    next();
+  };
+}

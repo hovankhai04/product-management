@@ -8,9 +8,17 @@ const controller = require('../../controllers/admin/my-account.controller');
 
 const uploadCloud = require('../../middlewares/admin/uploadCloud.middleware');
 
-router.get('/', controller.index);
+const authMiddleware = require('../../middlewares/admin/auth.middleware');
 
-router.get('/edit', controller.edit);
+router.get(
+  '/',
+  controller.index
+);
+
+router.get(
+  '/edit',
+  controller.edit
+);
 
 router.patch(
   '/edit',

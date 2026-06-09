@@ -11,29 +11,55 @@ const uploadCloud = require('../../middlewares/admin/uploadCloud.middleware');
 
 const validate = require('../../validates/admin/accounts.validate');
 
-router.get('/', controller.index);
+const authMiddleware = require('../../middlewares/admin/auth.middleware');
 
-router.get('/create', controller.create);
+const PERMISSION = require('../../permissions/admin/admin.permission');
+
+router.get(
+  '/',
+  authMiddleware.checkPermission(PERMISSION.ACCOUNTS.VIEW),
+  controller.index
+);
+
+router.get(
+  '/create',
+  authMiddleware.checkPermission(PERMISSION.ACCOUNTS.CREATE),
+  controller.create
+);
 
 router.post(
   '/create',
+  authMiddleware.checkPermission(PERMISSION.ACCOUNTS.CREATE),
   upload.single('avatar'),
   uploadCloud.upload,
   validate.createPost,
   controller.createPost,
 );
 
-router.get('/edit/:id', controller.edit);
+router.get(
+  '/edit/:id',
+  authMiddleware.checkPermission(PERMISSION.ACCOUNTS.EDIT),
+  controller.edit
+);
 
 router.patch(
   '/edit/:id',
+  authMiddleware.checkPermission(PERMISSION.ACCOUNTS.EDIT),
   upload.single('avatar'),
   uploadCloud.upload,
   validate.editPatch,
   controller.editPatch,
 );
 
-router.delete('/delete/:id', controller.deleteAccount);
+router.delete(
+  '/delete/:id',
+  authMiddleware.checkPermission(PERMISSION.ACCOUNTS.DELETE),
+  controller.deleteAccount
+);
 
-router.get("/detail/:id", controller.detail);
+router.get(
+  "/detail/:id",
+  authMiddleware.checkPermission(PERMISSION.ACCOUNTS.VIEW),
+  controller.detail
+);
 module.exports = router;

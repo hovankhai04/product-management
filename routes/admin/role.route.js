@@ -3,20 +3,48 @@ const router = express.Router();
 
 const controller = require('../../controllers/admin/role.controller');
 
-router.get('/', controller.index);
+const authMiddleware = require('../../middlewares/admin/auth.middleware');
 
-router.get('/create', controller.create);
+const PERMISSION = require('../../permissions/admin/admin.permission');
 
-router.post('/create', controller.createPost);
+router.get(
+  '/',
+  authMiddleware.checkPermission(PERMISSION.ROLES.VIEW),
+  controller.index);
 
-router.get('/edit/:id', controller.edit);
+router.get(
+  '/create',
+  authMiddleware.checkPermission(PERMISSION.ROLES.CREATE),
+  controller.create);
 
-router.patch('/edit/:id', controller.editPatch);
+router.post(
+  '/create',
+  authMiddleware.checkPermission(PERMISSION.ROLES.CREATE),
+  controller.createPost);
 
-router.get('/detail/:id', controller.detail);
+router.get(
+  '/edit/:id',
+  authMiddleware.checkPermission(PERMISSION.ROLES.EDIT),
+  controller.edit);
 
-router.get('/permissions', controller.permissions);
+router.patch(
+  '/edit/:id',
+  authMiddleware.checkPermission(PERMISSION.ROLES.EDIT),
+  controller.editPatch);
 
-router.patch('/permissions', controller.permissionsPatch);
+router.get(
+  '/detail/:id',
+  authMiddleware.checkPermission(PERMISSION.ROLES.VIEW),
+  controller.detail);
+
+router.get(
+  '/permissions',
+  authMiddleware.checkPermission(PERMISSION.ROLES.PERMISSIONS),
+  controller.permissions);
+
+router.patch(
+  '/permissions',
+  authMiddleware.checkPermission(PERMISSION.ROLES.PERMISSIONS),
+  controller.permissionsPatch);
 
 module.exports = router;
