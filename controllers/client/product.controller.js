@@ -4,6 +4,8 @@ const ProductHelper = require('../../helpers/product.js');
 
 // [GET] /products
 module.exports.index = async (req, res) => {
+
+  // Lấy ra sản phẩm nổi bật
   const products = await Product.find({
     deleted: false,
     status: 'active',
@@ -11,9 +13,18 @@ module.exports.index = async (req, res) => {
 
   const newProducts = ProductHelper.priceNewProducts(products);
 
+  // Lấy ra sản phẩm mới nhất
+  const productsNew = await Product.find({
+    deleted: false,
+    status: 'active'
+  }).limit(6).sort({ position: "desc" });
+
+  const newProductsNew = ProductHelper.priceNewProducts(productsNew);
+
   res.render('client/pages/products/index', {
     pageTitle: 'Trang danh sách sản phẩm',
     products: newProducts,
+    productsNew: newProductsNew,
   });
 };
 
