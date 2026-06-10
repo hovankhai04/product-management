@@ -6,12 +6,19 @@ block main
       .col-12
         if (product.title)
           h1(class="mb-4") #{product.title}
+        
+        if (product.category)
+          div(class="mb-4") <b> Danh mục: </b>
+            a(href=`/products/${product.category.slug}`) #{product.category.title}
 
-        if (product.price)
-          div(class="mb-4") Giá: <b> #{product.price}$ <b>
+        if (product.priceNew)
+          div(class="mb-4") <b> Giá mới: #{product.priceNew}$ <b>
 
         if (product.discountPercentage)
           div(class="mb-4") Giảm giá: <b> #{product.discountPercentage}% <b>
+
+        if (product.price)
+          div(class="mb-4") Giá cũ: <b> #{product.price}$ <b>
         
         if (product.stock)
           div(class="mb-4") Số lượng hàng: <b> #{product.stock} <b>
@@ -22,7 +29,27 @@ block main
             alt=product.title,
             width= 450 px
           )
+        form(
+          action=`/card/add/${product.id}`,
+          method="POST"
+        )
+          input(
+            class="form-control mb-2",
+            type="number",
+            name="quantity",
+            value="1",
+            min="1",
+            max=product.stock
+          )
+          button(
+            class="btn btn-primary btn-block",
+            type="submit"
+          ) Thêm vào giỏ hàng
 
+          
+  .container.my-3 
+    .row
+      .col-12
         if (product.description)
           div(class="mb-4") Mô tả:
-          p #{product.description}
+          p !{product.description}
