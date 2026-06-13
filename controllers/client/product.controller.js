@@ -73,6 +73,11 @@ module.exports.category = async (req, res) => {
     status: "active"
   })
 
+  if (!category) {
+    req.flash("error", "Danh mục không tồn tại!");
+    return res.redirect("/products");
+  }
+
   const listSubCategory = await ProductsCategoryHelper.getSubCategory(category.id);
 
   const listSubCategoryId = listSubCategory.map(item => item.id)
