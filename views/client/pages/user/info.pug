@@ -1,0 +1,28 @@
+extends ../../layouts/default.pug
+include ../../mixins/box-head.pug
+
+block main
+  .container.my-3 
+    .row
+      .col-12
+        +box-head(pageTitle)
+  
+  if (user.avatar)
+    img(
+      src=`${user.avatar}`
+      width="500px"
+      class="mb-4"
+      alt="Avatar"
+    )
+  
+  if (user.fullName)
+    p Họ tên: <b> #{user.fullName} </b>
+
+  if (user.email)
+    p Email: <b> #{user.email} </b>
+
+  if (user.phone)
+    p Số điện thoại: <b> #{user.phone} </b>
+  
+  if (user.status)
+    p Trạng thái: <b> #{user.status === 'active' ? 'Hoạt động' : 'Ngừng hoạt động'} </b>

@@ -10,6 +10,8 @@ const ForgotPassword = require('../../models/forgot-password.model')
 
 const sendMailHelper = require('../../helpers/sendMail');
 
+const Cart = require('../../models/cart.model');
+
 // [GET] /user/register
 module.exports.register = async (req, res) => {
   res.render('client/pages/user/register', {
@@ -69,6 +71,50 @@ module.exports.loginPost = async (req, res) => {
     res.redirect('/user/login');
     return;
   }
+
+  const guestCart = await Cart.findOne({
+    _id: req.cookies.cartId
+  });
+
+  const userCart = await Cart.findOne({
+    user_id: user.id
+  });
+
+  if (userCart) {
+
+    for (const guestProduct of guestCart.products) {
+
+      const existProduct = userCart.products.find(
+        item => item.product_id === guestProduct.product_id
+      );
+
+      if (existProduct) {
+        existProduct.quantity += guestProduct.quantity;
+      } else {
+        userCart.products.push({
+          product_id: guestProduct.product_id,
+          quantity: guestProduct.quantity
+        });
+      }
+    }
+
+    await userCart.save();
+
+    await Cart.deleteOne({
+      _id: guestCart.id
+    });
+
+    res.cookie('cartId', userCart.id);
+
+  } else {
+
+    guestCart.user_id = user.id;
+
+    await guestCart.save();
+
+    res.cookie('cartId', guestCart.id);
+  }
+
   res.cookie('tokenUser', user.tokenUser);
 
   res.redirect('/')
@@ -77,6 +123,16 @@ module.exports.loginPost = async (req, res) => {
 // [GET] /user/logout
 module.exports.logout = async (req, res) => {
   res.clearCookie('tokenUser');
+
+  const guestCart = new Cart();
+  await guestCart.save();
+
+  const expiresCookie = 365 * 24 * 60 * 60 * 1000;
+
+  res.cookie('cartId', guestCart.id, {
+    expires: new Date(Date.now() + expiresCookie)
+  });
+
   res.redirect('/')
 }
 
@@ -176,4 +232,11 @@ module.exports.resetPasswordPost = async (req, res) => {
   req.flash('success', 'Đổi mật khẩu thành công');
   res.redirect("/");
 
+}
+
+// [GET] /user/info
+module.exports.info = async (req, res) => {
+  res.render('client/pages/user/info', {
+    pageTitle: 'Thông tin tài khoản'
+  });
 }
