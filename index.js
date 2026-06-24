@@ -65,6 +65,12 @@ async function startServer() {
   // Routes ( đăng ký các route vào server express )
   routeAdmin(app);
   route(app);
+  // 404
+  app.use((req, res) => {
+    res.status(404).render('client/pages/errors/404', {
+      pageTitle: '404 Not Found'
+    });
+  });
 
   app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
