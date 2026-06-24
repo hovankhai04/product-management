@@ -8,6 +8,9 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 
+const http = require('http');
+const { Server } = require('socket.io');
+
 require('dotenv').config();
 
 const methodOverride = require('method-override');
@@ -25,6 +28,14 @@ const route = require('./routes/client/index.route');
 
 const app = express();
 const port = process.env.PORT;
+
+// Socket.io
+const server = http.createServer(app);
+const io = new Server(server);
+io.on('connection', (socket) => {
+  console.log('User connected', socket.id);
+});
+// End Socket.io
 
 
 async function startServer() {
@@ -72,7 +83,7 @@ async function startServer() {
     });
   });
 
-  app.listen(port, () => {
+  server.listen(port, () => {
     console.log(`Server is running on port ${port}`);
   });
 }
