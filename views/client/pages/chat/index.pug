@@ -7,7 +7,7 @@ block main
       .col-12
         +box-head(pageTitle)
 
-    .chat
+    .chat(my-id=user.id)
       .inner-body
         each chat in chats
           div(class=(chat.user_id == user.id ? "inner-outgoing" : "inner-incoming"))
@@ -15,29 +15,6 @@ block main
               .inner-name #{chat.infoUser.fullName}
             .inner-content
               | #{chat.content}
-        
-        //- .inner-incoming
-        //-   .inner-name Em yêu
-        //-   .inner-content
-        //-     | A ơi sang nhà e nha, nhà e không có ai ở nhà
-
-        //- .inner-outgoing
-        //-   .inner-content
-        //-     | Thế à? Oke em yêu
-
-        //- .inner-incoming
-        //-   .inner-name Em yêu
-        //-   .inner-content
-        //-     | Nhanh nha
-
-        //- .inner-outgoing
-        //-   .inner-content
-        //-     | Ck đến rồi mà thấy ai ở nhà đâu?
-
-        //- .inner-incoming
-        //-   .inner-name Em yêu
-        //-   .inner-content
-        //-     | Thì em bảo không ai ở nhà mà :))
 
       .inner-foot
         form.inner-form(action="")
