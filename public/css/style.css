@@ -193,3 +193,16 @@
   opacity: 0.85;
 }
 /* End Chat */
+
+/* Chat Icon */
+.tooltip {
+  visibility: hidden;
+  opacity: 0;
+  transition: all 0.2s;
+}
+
+.tooltip.shown {
+  visibility: visible;
+  opacity: 1;
+}
+/* End Chat Icon */
