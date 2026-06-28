@@ -257,3 +257,43 @@
   }
 }
 /* End Typing Indicator */
+
+/* Box User */
+.box-user {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  margin-bottom: 12px;
+}
+
+.box-user img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 12px;
+}
+
+.box-user .inner-info {
+  flex: 1;
+}
+
+.box-user .inner-name {
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.box-user .inner-buttons [btn-cancel-friend] {
+  display: none;
+}
+
+.box-user.add .inner-buttons [btn-add-friend] {
+  display: none;
+}
+
+.box-user.add .inner-buttons [btn-cancel-friend] {
+  display: inline-block;
+}
+/* End Box User */
