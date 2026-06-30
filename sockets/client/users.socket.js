@@ -50,6 +50,16 @@ module.exports = (res) => {
         userId: userId,
         lengthAcceptFriends: lengthAcceptFriends
       })
+
+      // Lấy info của A và trả về cho B
+      const infoUserA = await User.findOne({
+        _id: myUserId
+      }).select(" id avatar fullName ");
+
+      socket.broadcast.emit('SERVER_RETURN_INFO_ACCEPT_FRIEND', {
+        userId: userId,
+        infoUserA: infoUserA
+      });
     });
 
     // Chức năng huỷ gửi yêu cầu
@@ -98,6 +108,12 @@ module.exports = (res) => {
       socket.broadcast.emit('SERVER_RETURN_LENGTH_ACCEPT_FRIEND', {
         userId: userId,
         lengthAcceptFriends: lengthAcceptFriends
+      })
+
+      // Lấy id của A và trả về cho B để xoá A ra khỏi lời mời kết bạn
+      socket.broadcast.emit('SERVER_RETURN_USER_ID_CANCEL_FRIEND', {
+        userId: userId,
+        myUserId: myUserId
       })
     });
 
