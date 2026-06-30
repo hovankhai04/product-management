@@ -24,6 +24,10 @@ const userSchema = new mongoose.Schema(
         room_chat_id: String,
       }
     ],
+    statusOnline: {
+      type: String,
+      default: 'offline',
+    },
     deleted: {
       type: Boolean,
       default: false,
