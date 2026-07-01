@@ -1,5 +1,7 @@
 const User = require('../../models/user.model');
 
+const RoomChat = require('../../models/rooms-chat.model');
+
 module.exports = (res) => {
 
   _io.once('connection', (socket) => {
@@ -160,12 +162,42 @@ module.exports = (res) => {
     socket.on('CLIENT_ACCEPT_FRIEND', async (userId) => {
       const myUserId = res.locals.user.id;
 
-      // Xoá id của B vào acceptFriends của A
+      // check exist
       const existIdBinA = await User.findOne({
         _id: myUserId,
         acceptFriends: userId
       });
 
+      const existIdAinB = await User.findOne({
+        _id: userId,
+        requestFriends: myUserId
+      });
+      // end check exist
+
+      // Tạo phòng chat chung
+      let roomChat;
+      if (existIdBinA && existIdAinB) {
+        const dataRoom = {
+          typeRoom: "friend",
+          users: [
+            {
+              user_id: userId,
+              role: "superAdmin"
+            },
+            {
+              user_id: myUserId,
+              role: "superAdmin"
+            }
+          ]
+        }
+        roomChat = new RoomChat(dataRoom);
+        await roomChat.save();
+      }
+
+      // Hết tạo phòng chat chung
+
+
+      // Xoá id của B vào acceptFriends của A
       if (existIdBinA) {
         await User.updateOne({
           _id: myUserId
@@ -173,7 +205,7 @@ module.exports = (res) => {
           $push: {
             friendList: {
               user_id: userId,
-              room_chat_id: ""
+              room_chat_id: roomChat.id
             }
           },
           $pull: {
@@ -183,11 +215,6 @@ module.exports = (res) => {
       }
 
       // Xoá id của A vào requestFriends của B
-      const existIdAinB = await User.findOne({
-        _id: userId,
-        requestFriends: myUserId
-      });
-
       if (existIdAinB) {
         await User.updateOne({
           _id: userId
@@ -195,7 +222,7 @@ module.exports = (res) => {
           $push: {
             friendList: {
               user_id: myUserId,
-              room_chat_id: ""
+              room_chat_id: roomChat.id
             }
           },
           $pull: {
