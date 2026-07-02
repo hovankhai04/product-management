@@ -15,19 +15,20 @@ block main
         ) Tạo phòng chat
     
     .row  
-      .col-6 
-        div(class="box-room")
-          div(class="inner-avatar")
-            img(
-              src="/images/profile.png"
-              alt="Phong abc"
-            )
-          
-          div(class="inner-info")
-            div(class="inner-name") Phòng abc
-            div(class="inner-buttons")
-              a(
-                href="#"
-                class="btn btn-primary btn-sm"
-              ) Nhắn tin
+      each roomChat in roomChats
+        .col-6 
+          div(class="box-room")
+            div(class="inner-avatar")
+              img(
+                src="/images/profile.png"
+                alt=roomChat.title
+              )
+            
+            div(class="inner-info")
+              div(class="inner-name") #{roomChat.title}
+              div(class="inner-buttons")
+                a(
+                  href=`/chat/${roomChat.id}`
+                  class="btn btn-primary btn-sm"
+                ) Nhắn tin
 
